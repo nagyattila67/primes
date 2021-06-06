@@ -183,6 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#distanceButton").addEventListener("click", distanceButtonFunction)
 })
 
+let occurrenceOfDistances = Array()
 const distances = Array();
 const distanceButtonFunction = function () {
     primes.forEach((value, index, array) => {
@@ -199,29 +200,92 @@ const distanceButtonFunction = function () {
     })
     document.querySelector("#distancesDiv").innerHTML = distanceContent
 
-    let max=Math.max(...distances);
-    document.querySelector("#distMax").innerHTML=max;
-    let occurrenceOfDistances=Array()
-    for(let i=0;i<max+1;i++){ occurrenceOfDistances[i]=0}
-    distances.forEach((value)=>{
-        occurrenceOfDistances[value]+=1;
+    let max = Math.max(...distances);
+    document.querySelector("#distMax").innerHTML = max;
+    occurrenceOfDistances = Array()
+    for (let i = 0; i < max + 1; i++) { occurrenceOfDistances[i] = 0 }
+    distances.forEach((value) => {
+        occurrenceOfDistances[value] += 1;
     })
 
-    let contentDistancesTr1="";
-    let contentDistancesTr2="";
-    occurrenceOfDistances.forEach((value,index)=>{
-        contentDistancesTr1+=`
+    let contentDistancesTr1 = "";
+    let contentDistancesTr2 = "";
+    occurrenceOfDistances.forEach((value, index) => {
+        contentDistancesTr1 += `
         <td>${index}</td>
         `
     })
-    occurrenceOfDistances.forEach((value,index)=>{
-        contentDistancesTr2+=`
+    occurrenceOfDistances.forEach((value, index) => {
+        contentDistancesTr2 += `
         <td>${value}</td>
         `
     })
-    
-    document.querySelector("#distancesDistributionTr1").innerHTML=contentDistancesTr1
-    document.querySelector("#distancesDistributionTr2").innerHTML=contentDistancesTr2
+
+    document.querySelector("#distancesDistributionTr1").innerHTML = contentDistancesTr1
+    document.querySelector("#distancesDistributionTr2").innerHTML = contentDistancesTr2
+    distancesMaxFunction();
+    drawOccurranceGraph();
+}
+
+let distancesMax = 0;
+const distancesMaxFunction = function () {
+    for (let i = 0; i < occurrenceOfDistances.length; i++) {
+        if (occurrenceOfDistances[i] > distancesMax) { distancesMax = occurrenceOfDistances[i] }
+    }
+}
+
+const drawOccurranceGraph = function () {
+    const down = distancesMax;
+    document.querySelector("#distributionCanvas").setAttribute("height", `${distancesMax}px`)
+    let c = document.querySelector("#distributionCanvas");
+    let ctx = c.getContext("2d");
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    occurrenceOfDistances.forEach((value, index) => {
+        ctx.moveTo(5 * index, down);
+        ctx.lineTo(5 * index, down - value);
+    })
+    ctx.stroke();
+}
+
+let occurrenceOfDistances2 = Array();
+let monotonityOfOccurrenceOfDistances = Array();
+const checkMonotonityOfOccurrenceOfDistances = function () {
+    occurrenceOfDistances2 = Array();
+    occurrenceOfDistances.forEach((value, index) => {
+        if (index % 2 == 0) { occurrenceOfDistances2.push(value) }
+    })
+    monotonityOfOccurrenceOfDistances = Array();
+    for (let i = 1; i < occurrenceOfDistances2.length - 1; i++) {
+        let myDifference = occurrenceOfDistances2[i + 1] - occurrenceOfDistances2[i];
+        //nullával nem oszthatunk, meg kell keresni az utolsó nem 0 értéket
+        let lastNotNullValue = occurrenceOfDistances2[i];
+        myIndex = i;
+        while (lastNotNullValue == 0) {
+            myIndex = myIndex - 1;
+            lastNotNullValue = occurrenceOfDistances2[myIndex];
+        }
+        myDifference = myDifference * 100 / lastNotNullValue;
+        myDifference = Math.round(myDifference);
+
+
+
+        monotonityOfOccurrenceOfDistances.push(myDifference)
+    }
+    let c = document.querySelector("#monotonityOfOccurrenceOfDistancesCanvas");
+    let middle = 100;
+    document.querySelector("#monotonityOfOccurrenceOfDistancesCanvas").setAttribute("height", `${2 * middle}px`)
+    let ctx = c.getContext("2d");
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    monotonityOfOccurrenceOfDistances.forEach((value, index) => {
+        ctx.moveTo(5 * index, middle);
+        ctx.lineTo(5 * index, middle + value);
+    })
+    ctx.stroke();
+
+
+
 }
 
 
