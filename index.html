@@ -76,6 +76,34 @@
                     </table>
                 </div>
                 <div class="mt-3 grey">
+                    <p>A prímek számjegyei összegének az eloszlása. <small>(Addig adjuk össze a számjegyeket, amíg egy
+                            számjegyű számot nem kapunk.)</small> </p>
+                    <table class="table table-bordered border-secondary" id="tableForSumOfNumbers">
+                        <tbody id="tbodyForSumOfNumbers"></tbody>
+                    </table>
+                </div>
+                <div class="mt-3 grey">
+                    <p>Ha a prím számjegyeinek összege az adott érték (első sor), akkor annak a valószínűsége (%), hogy
+                        az
+                        <select id="selectForOsszegetKovetoEloszlas">
+                            <option value="1">első</option>
+                            <option value="2">második</option>
+                            <option value="3">harmadik</option>
+                            <option value="4">negyedik</option>
+                            <option value="5">ötödik</option>
+                            <option value="6">hatodik</option>
+                            <option value="7">hetedik</option>
+                        </select>
+                        azt követő prím számjegyeinek összege az adott érték (első oszlop).
+                    </p>
+                    <button id="buttonForOsszegetKovetoEloszlas" class="button btn-secondary btn-small">Mehet</button>
+                    <table class="table table-bordered border-secondary">
+                        <thead id="TheadForOsszegetKovetoEloszlas">
+                            </tbody>
+                        <tbody id="TbodyForOsszegetKovetoEloszlas"></tbody>
+                    </table>
+                </div>
+                <div class="mt-3 grey">
                     <p>Az egyes prímek közötti távolságok.</p>
                     <button id="distanceButton" class="button btn-secondary btn-small">keres</button>
                     <span style="margin-left:20px"> A legnagyobb távolság: <span id="distMax"></span></span>
@@ -86,7 +114,7 @@
                     <p>Az egyes távolságok eloszlása. <small>(Felső sor: a távolság; alsó sor: hány db. van
                             belőle.</small></p>
                     <div id="distancesDistributionDiv">
-                        <table class="table table-bordered">
+                        <table id="distancesDistributionTable" class="table table-bordered border-secondary">
                             <tbody id="distancesDistributionTbody">
                                 <tr id="distancesDistributionTr1"></tr>
                                 <tr id="distancesDistributionTr2"></tr>
@@ -94,16 +122,20 @@
                         </table>
                     </div>
                 </div>
-                <div class="mt-3 grey">
+                <div id="divForDistributionTable" class="mt-3 grey">
+                    <p>Ugyanez grafikonon:</p>
                     <table id="distributionTable">
                         <tbody id="distributionTbody"></tbody>
                     </table>
                 </div>
 
                 <div id="divForDistributionCanvas" class="mt-3 grey">
-                    <canvas id="distributionCanvas" width="500" height="900"></canvas>
+                    <canvas id="distributionCanvas" width="400" height="900"></canvas>
                 </div>
                 <div id="divForMonotonityOfOccurrenceOfDistancesCanvas" class="mt-3 grey">
+                    <p>A következő grafikon azt mutatja meg, hogy a fenti oszlopgrafikonon a következő (nem 0 magasságú)
+                        oszlop magasságának az eltérése az előzőtől az előző magasságának a hány százaléka. (Az első kék
+                        oszlop mutatja a +/- 100 %-ot)</p>
                     <canvas id="monotonityOfOccurrenceOfDistancesCanvas" width="500" height="900"></canvas>
                 </div>
                 <div id="divForTavolsagEloszlas" class="mt-3 grey">

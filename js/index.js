@@ -177,6 +177,7 @@ const nextNearestFunction = function () {
         <td ${lastDigitNumbers[7] == min ? 'class="red"' : ''}>${(lastDigitNumbers[7] * 100 / allNumber).toFixed(2)} %</td>
         <td ${lastDigitNumbers[9] == min ? 'class="red"' : ''}>${(lastDigitNumbers[9] * 100 / allNumber).toFixed(2)} %</td>
         `;
+    sumOfNumbersFunction();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -225,6 +226,7 @@ const distanceButtonFunction = function () {
     document.querySelector("#distancesDistributionTr2").innerHTML = contentDistancesTr2
     distancesMaxFunction();
     drawOccurranceGraph();
+    checkMonotonityOfOccurrenceOfDistances();
 }
 
 let distancesMax = 0;
@@ -266,7 +268,7 @@ const checkMonotonityOfOccurrenceOfDistances = function () {
             lastNotNullValue = occurrenceOfDistances2[myIndex];
         }
         myDifference = myDifference * 100 / lastNotNullValue;
-        myDifference = Math.round(myDifference);
+        myDifference = Math.ceil(myDifference);
 
 
 
@@ -276,16 +278,140 @@ const checkMonotonityOfOccurrenceOfDistances = function () {
     let middle = 100;
     document.querySelector("#monotonityOfOccurrenceOfDistancesCanvas").setAttribute("height", `${2 * middle}px`)
     let ctx = c.getContext("2d");
-    ctx.lineWidth = 4;
     ctx.beginPath();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'blue';
+    ctx.moveTo(0, -1000);
+    ctx.lineTo(0, 1000);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'black';
     monotonityOfOccurrenceOfDistances.forEach((value, index) => {
         ctx.moveTo(5 * index, middle);
         ctx.lineTo(5 * index, middle + value);
+        ctx.stroke();
     })
-    ctx.stroke();
+}
 
+let place = document.querySelector("#tbodyForSumOfNumbers");
+let newTr = "";
+const buildingTableForSumOfNumbers = function () {
+    newTr = document.createElement("tr");
+    place.appendChild(newTr);
+    for (let i = 0; i < 10; i++) {
+        let newTd = document.createElement("td");
+        newTr.appendChild(newTd);
+        newTd.innerHTML = i;
+    }
+    newTr = document.createElement("tr");
+    place.appendChild(newTr);
+}
+buildingTableForSumOfNumbers();
+
+let sumOfNumbersArray = Array();
+let occurrenceOfSum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const sumOfNumbersFunction = function () {
+    occurrenceOfSum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    sumOfNumbersArray = Array();
+
+    primes.forEach((value, index) => {
+        let onlyOneNumber = false;
+        let mySum = 0;
+        if (value % 10 == value) { onlyOneNumber = true; mySum = value }
+        while (onlyOneNumber == false) {
+            mySum += value % 10;
+            value = (value - value % 10) / 10;
+            if (value % 10 == value) {
+                mySum += value;
+                if (mySum % 10 == mySum) { onlyOneNumber = true }
+                else { value = mySum; mySum = 0 }
+            }
+        }
+        sumOfNumbersArray.push(mySum)
+    })
+    console.log(sumOfNumbersArray);
+    sumOfNumbersArray.forEach((value, index) => {
+        occurrenceOfSum[value] += 1;
+    })
+    newTr.innerHTML="";
+    occurrenceOfSum.forEach((value, index) => {
+        newTr.innerHTML += `<td>${value}</td>`
+    })
+}
+
+let place2 = document.querySelector("#TheadForOsszegetKovetoEloszlas");
+var newTr2 = document.createElement("tr");
+place2.appendChild(newTr2);
+for (let i = 0; i < 11; i++) {
+    let newTd = document.createElement("td");
+    newTr2.appendChild(newTd);
+    if (i == 0) { newTd.innerHTML = "" }
+    else { newTd.innerHTML = i - 1; }
+}
+//var newTr2 = document.createElement("tr");
+//place2.appendChild(newTr2)
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("#buttonForOsszegetKovetoEloszlas").addEventListener('click', osszegetKovetoEloszlasFunction)
+})
+
+let osszegetKovetoEloszlasArray = Array();
+const osszegetKovetoEloszlasFunction = function () {
+    osszegetKovetoEloszlasArray = Array();
+
+    let myGap = document.querySelector("#selectForOsszegetKovetoEloszlas").value;
+    myGap = parseInt(myGap);
+    console.log(myGap)
+
+    for (let j = 0; j < 10; j++) {
+        let myArray = Array();
+        for (let i = 0; i < 10; i++) {
+            myArray[i] = 0;
+        }
+        osszegetKovetoEloszlasArray[j] = myArray;
+    }
+    for (let i = 0; i < sumOfNumbersArray.length - myGap; i++) {
+        osszegetKovetoEloszlasArray[sumOfNumbersArray[i]][sumOfNumbersArray[i + myGap]] += 1;
+    }
+
+    osszegetKovetoEloszlasArray.forEach((value, index) => {
+        value.forEach((value, index, array) => {
+            if (array[index] != 0 && occurrenceOfSum[index] != 0) {
+                array[index] = (value * 100 / occurrenceOfSum[index]).toFixed(1);
+            }
+            else { array[index] = "-" }
+        })
+    })
+    let place = document.querySelector("#TbodyForOsszegetKovetoEloszlas")
+    let myContent = "";
+    for (let i = 0; i < 10; i++) {
+        myContent += `<tr><td>${i}</td>`
+        for (let j = 0; j < 10; j++) {
+            myContent += `<td>${osszegetKovetoEloszlasArray[i][j]}</td>`
+        }
+        place.innerHTML += `</tr>`
+    }
+    place.innerHTML = myContent;
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
