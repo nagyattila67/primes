@@ -3,8 +3,9 @@
 .red{color:red}
 #distancesDiv{color:black;overflow:auto;max-width:600px;height:100px;background-color:#ededed;border: 1px solid, #939393}
 #distancesDistributionDiv{overflow: scroll; color:black;max-width:600px;height:120px;background-color:#ededed;border: 1px solid, #939393}
-#distancesDistributionTable{}
+
 #divForDistributionTable{width:600;overflow:scroll}
 distributionTable{width:900px;height:500px;overflow: scroll;}
 #divForDistributionCanvas{ width:900px;height:500px;overflow: scroll;}
 #divForMonotonityOfOccurrenceOfDistancesCanvas{ width:900px;height:300px;overflow: scroll;}
+.div2{overflow: scroll;}

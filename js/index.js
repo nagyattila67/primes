@@ -2,7 +2,7 @@
 let primes = [2];
 //const limitDown = 2
 //const limitUp = 100000000;
-let primeStrings = Array();
+let = Array();
 let numbers = Array();
 let numbersOfChosenDigit = Array();
 numberSystem = 10;
@@ -311,6 +311,7 @@ const buildingTableForSumOfNumbers = function () {
 buildingTableForSumOfNumbers();
 
 let sumOfNumbersArray = Array();
+//sumOfNumbersArray: az ennyiedik indexű prím számjegyeinek az összege ennyi
 let occurrenceOfSum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 const sumOfNumbersFunction = function () {
     occurrenceOfSum = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -335,7 +336,7 @@ const sumOfNumbersFunction = function () {
     sumOfNumbersArray.forEach((value, index) => {
         occurrenceOfSum[value] += 1;
     })
-    newTr.innerHTML="";
+    newTr.innerHTML = "";
     occurrenceOfSum.forEach((value, index) => {
         newTr.innerHTML += `<td>${value}</td>`
     })
@@ -357,13 +358,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#buttonForOsszegetKovetoEloszlas").addEventListener('click', osszegetKovetoEloszlasFunction)
 })
 
+let testing = false;
 let osszegetKovetoEloszlasArray = Array();
 const osszegetKovetoEloszlasFunction = function () {
     osszegetKovetoEloszlasArray = Array();
 
-    let myGap = document.querySelector("#selectForOsszegetKovetoEloszlas").value;
-    myGap = parseInt(myGap);
-    console.log(myGap)
+    let myGap = 1;
+    if (testing == false) {
+        myGap = document.querySelector("#selectForOsszegetKovetoEloszlas").value;
+        myGap = parseInt(myGap);
+        console.log(myGap)
+    }
 
     for (let j = 0; j < 10; j++) {
         let myArray = Array();
@@ -384,22 +389,121 @@ const osszegetKovetoEloszlasFunction = function () {
             else { array[index] = "-" }
         })
     })
-    let place = document.querySelector("#TbodyForOsszegetKovetoEloszlas")
-    let myContent = "";
-    for (let i = 0; i < 10; i++) {
-        myContent += `<tr><td>${i}</td>`
-        for (let j = 0; j < 10; j++) {
-            myContent += `<td>${osszegetKovetoEloszlasArray[i][j]}</td>`
+    if (testing == false) {
+        let place = document.querySelector("#TbodyForOsszegetKovetoEloszlas")
+        let myContent = "";
+        for (let i = 0; i < 10; i++) {
+            myContent += `<tr><td>${i}</td>`
+            for (let j = 0; j < 10; j++) {
+                myContent += `<td>${osszegetKovetoEloszlasArray[i][j]}</td>`
+            }
+            place.innerHTML += `</tr>`
         }
-        place.innerHTML += `</tr>`
-    }
-    place.innerHTML = myContent;
+        place.innerHTML = myContent;
+    };
 
 
 }
 
+let result = 0;
+const test = function (first, second) {
+    testing = true;
+    osszegetKovetoEloszlasArray = Array();
+    osszegetKovetoEloszlasFunction();
+    result = 0;
+    for (let i = 0; i < 10; i++) {
+        let a = osszegetKovetoEloszlasArray[first][i];
+        if (a == "-") { a = 0 };
+        a = parseInt(a);
+        let b = osszegetKovetoEloszlasArray[i][second];
+        if (b == "-") { b = 0 };
+        b = parseInt(b);
+        console.log(a);
+        console.log(b);
+        console.log("a*b=", a * b)
+        result += a * b / 100;
+    }
+    console.log(result);
+    testing = false;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("#buttonForUtolsoSzamjegyetMegelozoSzamjegyEloszlas").addEventListener('click', utolsoSzamjegyetMegelozoSzamjegyEloszlasFunction)
+})
+
+const place3 = document.querySelector("#TheadForUtolsoSzamjegyetMegelozoSzamjegyEloszlas");
+newTr3 = document.createElement("tr");
+place3.appendChild(newTr3);
+for (let i = 0; i < 11; i++) {
+    let myTd = document.createElement("td");
+    newTr3.appendChild(myTd);
+    if (i == 0) { myTd.innerHTML = "" }
+    else { myTd.innerHTML = i - 1 }
+}
 
 
+
+
+const utolsoSzamjegyetMegelozoSzamjegyEloszlasFunction = function () {
+
+    let myNumber1 = document.querySelector("#selectForUtolsoSzamjegyetMegelozoSzamjegyEloszlas1").value;
+    let myNumber2 = document.querySelector("#selectForUtolsoSzamjegyetMegelozoSzamjegyEloszlas2").value;
+    myNumber1 = parseInt(myNumber1);
+    myNumber2 = parseInt(myNumber2);
+    let myMax = Math.max(myNumber1, myNumber2)
+    let utolsoSzamjegyetMegelozoSzamjegyEloszlas = Array();
+    //index: mi a prím a hátulról myNumber1-edik számjegye;
+    //belső Array indexe: abban az esetben mi a prím a hátulról myNumber2-edik számjegye;
+    newPrimeStrings = primeStrings.filter((value) => { if (value.length > myMax - 1) { return true } })
+    for (let i = 0; i < 10; i++) {
+        let myArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        utolsoSzamjegyetMegelozoSzamjegyEloszlas[i] = myArray;
+    };
+
+    newPrimeStrings.forEach((value) => {
+        utolsoSzamjegyetMegelozoSzamjegyEloszlas[value[value.length - myNumber1]][value[value.length - myNumber2]] += 1;
+    })
+
+    myLengths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    utolsoSzamjegyetMegelozoSzamjegyEloszlas.forEach((value, index) => {
+        let myLength = 0;
+        value.forEach((value) => { myLength += value })
+        myLengths[index] = myLength;
+
+    })
+
+    utolsoSzamjegyetMegelozoSzamjegyEloszlas.forEach((value, index, array) => {
+        array[index] = value.map(item =>
+            myLengths[index] == 0 ? 0 : Number((item * 100 / myLengths[index]).toFixed(5)))
+    })
+
+    const myTbody = document.querySelector("#TbodyForUtolsoSzamjegyetMegelozoSzamjegyEloszlas")
+    myTbody.innerHTML = "";
+    let content = "";
+    utolsoSzamjegyetMegelozoSzamjegyEloszlas.forEach((value, index,array) => {
+        content += `
+        <tr><td>${index}</td>
+        `
+        let min = Math.min(...array[index]);
+        let max = Math.max(...array[index]);
+        value.forEach((value) => {
+            content += `
+            <td
+            ${value==min&&value!=0?"style='color:green'":''}
+            ${value==max&&value!=0?"style='color:red'":''}
+            >${value} %</td>
+            `
+        })
+        content += `<tr>`
+        myTbody.innerHTML = content;
+    })
+
+
+
+
+
+
+}
 
 
 
