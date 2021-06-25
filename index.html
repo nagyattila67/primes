@@ -105,7 +105,7 @@
                 </div>
 
                 <div class="mt-3 grey">
-                    <p>Ha a prím hátulról 
+                    <p>Ha a prím hátulról
                         <select id="selectForUtolsoSzamjegyetMegelozoSzamjegyEloszlas1">
                             <option value="1">első</option>
                             <option value="2">második</option>
@@ -114,7 +114,7 @@
                             <option value="5">ötödik</option>
                             <option value="6">hatodik</option>
                         </select>
-                        számjegye az adott érték (első oszlop), akkor annak a valószínűsége (%), hogy az
+                        számjegye az adott érték (első oszlop), akkor annak a valószínűsége (%), hogy a prím hátulról
                         <select id="selectForUtolsoSzamjegyetMegelozoSzamjegyEloszlas2">
                             <option value="1">első</option>
                             <option value="2">második</option>
@@ -123,7 +123,7 @@
                             <option value="5">ötödik</option>
                             <option value="6">hatodik</option>
                         </select>
-                        azt megelőző számjegy az adott érték (első sor).
+                        számjegye az adott érték (első sor).
                     </p>
                     <button id="buttonForUtolsoSzamjegyetMegelozoSzamjegyEloszlas"
                         class="button btn-secondary btn-small">Mehet</button>
@@ -136,7 +136,134 @@
                     </div>
                 </div>
 
+                <div class="mt-3 grey">
+                    <p>Ha a prím hátulról
+                        <select id="selectForSzamjegyetMegelozoMaximumokHol1">
+                            <option value="1">első</option>
+                            <option selected value="2">második</option>
+                            <option value="3">harmadik</option>
+                            <option value="4">negyedik</option>
+                            <option value="5">ötödik</option>
+                            <option value="6">hatodik</option>
+                        </select>
+                        számjegye
+                        <select id="selectForSzamjegyetMegelozoMaximumokHol2">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                        akkor a prímek sorozatában az első prímtől kezdve az egymást követő
+                        <input id="hosszInputForSzamjegyetMegelozoMaximumokHol3" type="number" value="100">
+                        hosszúságú intervallumokban található prímeknek a hátulról a(z)
+                        <select id="selectForSzamjegyetMegelozoMaximumokHol4">
+                            <option value="1">első</option>
+                            <option value="2">második</option>
+                            <option selected value="3">harmadik</option>
+                            <option value="4">negyedik</option>
+                            <option value="5">ötödik</option>
+                            <option value="6">hatodik</option>
+                        </select>
+                        helyén
+                        <input type="radio" name="minmax" id="radioMax" checked>
+                        <label for="radioMax">legtöbbször</label>
+                        <input type="radio" name="minmax" id="radioMin">
+                        <label for="radioMin">legkevesebbszer</label>
+                        előforduló számjegye. <small>(Vízszintes tengely: a prím sorszáma, az oszlop magassága: a
+                            legtöbbször/legkevesebbszer előforduló számjegy.)</small>
+                    </p>
+                    <button id="buttonForSzamjegyetMegelozoMaximumokHol"
+                        class="button btn-secondary btn-small">Mehet</button>
+                    <br><br>
+                    <div class="div2" id="divForExtremeEloszlas">
+                        <p id="extremeEloszlas"></p>
+                    </div>
+                    <div id="divForSzamjegyetMegelozoMaximumokCanvas">
+                        <canvas id="szamjegyetMegelozoMaximumokCanvas" width="10000" height="100"></canvas>
+                    </div>
+                    <br>
+                    <p>Második sor: fenti számjegyek eloszlása (melyikből hány db van)</p>
+                    <p>Harmadik sor: amikor a fenti számjegy max/min előfordulású, akkor ezeknek az előfordulások
+                        százalékértékeinek az átlaga.</p>
+                    <p>Negyedik sor: a fenti számjegyek összes intervallumban való százalékos előfordulásának az átlaga.
+                    </p>
 
+                    <table class="table table-bordered border-secondary">
+                        <thead id="theadForDistributionOfExtreme"></thead>
+                        <tbody id="tbodyForDistributionOfExtreme"></tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3 grey">
+                    Ha a prím hátulról a(z)
+                    <select id="selectForHatulrolAHanyadikSzamjegy">
+                        <option value="1">első</option>
+                        <option value="2">második</option>
+                        <option value="3">harmadik</option>
+                        <option selected value="4">negyedik</option>
+                        <option value="5">ötödik</option>
+                        <option value="6">hatodik</option>
+                    </select>
+                    számjegye
+                    <select id="selectForHatulrolAHanyadikSzamjegy2">
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option selected value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>,
+                    akkor a prímek sorozatában - a csak prímeket tartalmazó sorozatban - ekkora szünetekkel követik
+                    egymást az 'ezen a helyen ezen számjegyet tartalmazó' prímek.
+                    <button id="buttonForHatulrolAHanyadikSzamjegy" class="button btn-secondary btn-small">
+                        <div id="mySpinner1" class="spinner-grow spinner-grow-sm text-secondary" role="status"></div>
+                        Mehet
+                    </button>
+
+                    <p>Az összes <span id="span1"> - </span> vagy annál több számjegyű (ennyi db: <span id="span2"> -
+                        </span>)
+                        prímszámoknak a fenti feltételnek megfelelő prímek ennyi százaléka: <span id="span3"> - </span>;
+                        legmagasabb oszlop: <span id="span4"> - </span> (A grafikonon max. csak az oszlopgrafikon első 5
+                        000 oszlopa)</p>
+                    <div id="divForHatulrolAHanyadikSzamjegyArray"></div>
+                    <div id="divForHatulrolAHanyadikSzamjegy">
+                        <canvas id="canvasForHatulrolAHanyadikSzamjegy"></canvas>
+                    </div>
+                </div>
+
+                <div class="mt-3 grey" id="divForHatulrolAHanyadikSzamjegyEloszlas">
+                    <p>A fenti szünetek hosszúságainak eloszlása. Ennyi van az 1 hosszúságú szünetből, ennyi van a 2
+                        hosszúságú szünetből, s így tovább.</p>
+                    <div id="divForHatulrolAHanyadikSzamjegyEloszlasArray"></div>
+                    <div id="divForCanvasHatulrolAHanyadikSzamjegyEloszlas">
+                        <canvas id="canvasHatulrolAHanyadikSzamjegyEloszlas"></canvas>
+                    </div>
+                </div>
+
+                <div class="mt-3 grey" id="divForHanyPrimEgymasMellett">
+                    <p>Hány prím található egymás mellett. <small>- szürke: a csak prímekből álló sorozatban azoknak a
+                            prímeknek a sora, amelyek nem felelnek meg a feltételnek; fekete: amelyek megfelelnek a
+                            feltételnek.</small></p>
+                    <div id="divForHanyPrimEgymasMellettArray"></div>
+                    <div id="divForCanvasHanyPrimEgymasMellett">
+                        <canvas id="canvasForHanyPrimEgymasMellett"></canvas>
+                    </div>
+                </div>
+
+                <div class="mt-3 grey" id="divForMyPrimes">
+                    <p>Ellenőrzés - a prímek:</p>
+                    <div id="myPrimes"></div>
+                </div>
 
                 <div class="mt-3 grey">
                     <p>Az egyes prímek közötti távolságok.</p>
@@ -163,18 +290,25 @@
                         <tbody id="distributionTbody"></tbody>
                     </table>
                 </div>
-
-                <div id="divForDistributionCanvas" class="mt-3 grey">
-                    <canvas id="distributionCanvas" width="400" height="900"></canvas>
+                <div class="mt-3 grey" id="divForCongruence">
+                    Az adott prímmel való osztásra milyen maradékot ad az adott prím (bal oszlop),mi a valószínűsége
+                    annak, hogy az azt követő prím a fenti maradékot adja (felső sor).
+                    <p><input id="congruenceInput" type="number">
+                        <input type="radio" name="percentOrNot" id="percent" checked>
+                        <label for="percent">százalékot kérek</label>
+                        <input type="radio" name="percentOrNot" id="notPercent">
+                        <label for="notPercent">darabszámot kérek</label>
+                        <small>(A százalék két tizedes jegyre kerekítve van.)</small>
+                    </p>
+                    <button id="congruenceButton" class="button btn-secondary btn-small">Mehet</button>
+                    <table id="congruenceTable" class="table table-bordered border-secondary">
+                        <tbody id="congruenceTbody"></tbody>
+                    </table>
                 </div>
-                <div id="divForMonotonityOfOccurrenceOfDistancesCanvas" class="mt-3 grey">
-                    <p>A következő grafikon azt mutatja meg, hogy a fenti oszlopgrafikonon a következő (nem 0 magasságú)
-                        oszlop magasságának az eltérése az előzőtől az előző magasságának a hány százaléka. (Az első kék
-                        oszlop mutatja a +/- 100 %-ot)</p>
-                    <canvas id="monotonityOfOccurrenceOfDistancesCanvas" width="500" height="900"></canvas>
-                </div>
-                <div id="divForTavolsagEloszlas" class="mt-3 grey">
-                    <p></p>
+                <div class="mt-3 grey" id="divForOrderArray">
+                    <p>Ha egy prím a fenti számmal osztva ennyi maradékot ad (zárójelben), akkor az azt követő prím a
+                        legnagyobb velószínűséggel a következő maradékot fogja adni.</p>
+                    <p id="pForOrderArray"></p>
                 </div>
             </div>
             <div class="col col-sm-0 col-md-2 col-lg4"></div>

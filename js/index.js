@@ -1,4 +1,5 @@
 
+
 let primes = [2];
 //const limitDown = 2
 //const limitUp = 100000000;
@@ -14,6 +15,23 @@ let percentagesCD = Array();
 let allNumbers = 0;
 let allChosenDigit = 0;
 let chosenDigitString = 0;
+let utolsoSzamjegyetMegelozoSzamjegyEloszlas = Array();
+for (let i = 0; i < 10; i++) {
+    utolsoSzamjegyetMegelozoSzamjegyEloszlas[i] = Array();
+    for (let j = 0; j < 10; j++) {
+        utolsoSzamjegyetMegelozoSzamjegyEloszlas[i][j] = 0;
+    }
+}
+
+let matrix = Array();
+for (let i = 0; i < 10; i++) {
+    matrix[i] = Array();
+    for (let j = 0; j < 10; j++) {
+        matrix[i][j] = 9;
+    }
+}
+console.log(matrix);
+
 
 let limitDown = document.querySelector("#startNumber").value;
 limitDown = Number(limitDown);
@@ -32,6 +50,7 @@ let limitUpInputFunction = function () {
 
 }
 
+primeStrings = Array();
 const searchingPrimes = function () {
     timeStart = new Date();
     let limitDown = document.querySelector("#startNumber").value;
@@ -108,7 +127,8 @@ const searchingPrimes = function () {
 
     for (let i = 0; i < primes.length; i++) {
         mySpan1 = document.createElement("span");
-        mySpan1.innerHTML = primes[i];
+        let content = `(${i}) ${primes[i]}`
+        mySpan1.innerHTML = content;
         place.appendChild(mySpan1);
 
         mySpan2 = document.createElement("span");
@@ -116,18 +136,11 @@ const searchingPrimes = function () {
         place.appendChild(mySpan2);
     }
 
-
-
-
-
     let content = ``;
     for (let i = 0; i < 10; i++) {
         content = `<td>${percentages[i]} %</td>`
         document.querySelector("#startingTd").innerHTML += content
     }
-
-
-
 
     timeFinish = new Date();
     time = (timeFinish - timeStart) / 1000
@@ -239,6 +252,7 @@ const distancesMaxFunction = function () {
 const drawOccurranceGraph = function () {
     const down = distancesMax;
     document.querySelector("#distributionCanvas").setAttribute("height", `${distancesMax}px`)
+    document.querySelector("#distributionCanvas").width = occurrenceOfDistances.length * 5;
     let c = document.querySelector("#distributionCanvas");
     let ctx = c.getContext("2d");
     ctx.lineWidth = 4;
@@ -248,51 +262,6 @@ const drawOccurranceGraph = function () {
         ctx.lineTo(5 * index, down - value);
     })
     ctx.stroke();
-}
-
-let occurrenceOfDistances2 = Array();
-let monotonityOfOccurrenceOfDistances = Array();
-const checkMonotonityOfOccurrenceOfDistances = function () {
-    occurrenceOfDistances2 = Array();
-    occurrenceOfDistances.forEach((value, index) => {
-        if (index % 2 == 0) { occurrenceOfDistances2.push(value) }
-    })
-    monotonityOfOccurrenceOfDistances = Array();
-    for (let i = 1; i < occurrenceOfDistances2.length - 1; i++) {
-        let myDifference = occurrenceOfDistances2[i + 1] - occurrenceOfDistances2[i];
-        //nullával nem oszthatunk, meg kell keresni az utolsó nem 0 értéket
-        let lastNotNullValue = occurrenceOfDistances2[i];
-        myIndex = i;
-        while (lastNotNullValue == 0) {
-            myIndex = myIndex - 1;
-            lastNotNullValue = occurrenceOfDistances2[myIndex];
-        }
-        myDifference = myDifference * 100 / lastNotNullValue;
-        myDifference = Math.ceil(myDifference);
-
-
-
-        monotonityOfOccurrenceOfDistances.push(myDifference)
-    }
-    let c = document.querySelector("#monotonityOfOccurrenceOfDistancesCanvas");
-    let middle = 100;
-    document.querySelector("#monotonityOfOccurrenceOfDistancesCanvas").setAttribute("height", `${2 * middle}px`)
-    let ctx = c.getContext("2d");
-    ctx.beginPath();
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = 'blue';
-    ctx.moveTo(0, -1000);
-    ctx.lineTo(0, 1000);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = 'black';
-    monotonityOfOccurrenceOfDistances.forEach((value, index) => {
-        ctx.moveTo(5 * index, middle);
-        ctx.lineTo(5 * index, middle + value);
-        ctx.stroke();
-    })
 }
 
 let place = document.querySelector("#tbodyForSumOfNumbers");
@@ -401,8 +370,6 @@ const osszegetKovetoEloszlasFunction = function () {
         }
         place.innerHTML = myContent;
     };
-
-
 }
 
 let result = 0;
@@ -441,29 +408,39 @@ for (let i = 0; i < 11; i++) {
     else { myTd.innerHTML = i - 1 }
 }
 
-
-
-
 const utolsoSzamjegyetMegelozoSzamjegyEloszlasFunction = function () {
-
     let myNumber1 = document.querySelector("#selectForUtolsoSzamjegyetMegelozoSzamjegyEloszlas1").value;
     let myNumber2 = document.querySelector("#selectForUtolsoSzamjegyetMegelozoSzamjegyEloszlas2").value;
     myNumber1 = parseInt(myNumber1);
     myNumber2 = parseInt(myNumber2);
     let myMax = Math.max(myNumber1, myNumber2)
-    let utolsoSzamjegyetMegelozoSzamjegyEloszlas = Array();
+    newPrimeStrings = primeStrings.filter((value) => { if (value.length > myMax - 1) { return true } })
+    szamjegyEloszlasFunction(myNumber1, myNumber2, newPrimeStrings);
+    szamjegyEloszlasInPercent();
+    //?????????????????
+    eloszlastKiir(utolsoSzamjegyetMegelozoSzamjegyEloszlas)
+}
+
+
+const szamjegyEloszlasFunction = function (myNumber1, myNumber2, newPrimeStrings) {
+
     //index: mi a prím a hátulról myNumber1-edik számjegye;
     //belső Array indexe: abban az esetben mi a prím a hátulról myNumber2-edik számjegye;
-    newPrimeStrings = primeStrings.filter((value) => { if (value.length > myMax - 1) { return true } })
-    for (let i = 0; i < 10; i++) {
-        let myArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        utolsoSzamjegyetMegelozoSzamjegyEloszlas[i] = myArray;
-    };
+
+    console.log(utolsoSzamjegyetMegelozoSzamjegyEloszlas)
+    console.table(utolsoSzamjegyetMegelozoSzamjegyEloszlas)
 
     newPrimeStrings.forEach((value) => {
         utolsoSzamjegyetMegelozoSzamjegyEloszlas[value[value.length - myNumber1]][value[value.length - myNumber2]] += 1;
     })
 
+    console.log(utolsoSzamjegyetMegelozoSzamjegyEloszlas)
+    console.table(utolsoSzamjegyetMegelozoSzamjegyEloszlas)
+
+    return utolsoSzamjegyetMegelozoSzamjegyEloszlas;
+}
+
+const szamjegyEloszlasInPercent = function () {
     myLengths = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     utolsoSzamjegyetMegelozoSzamjegyEloszlas.forEach((value, index) => {
         let myLength = 0;
@@ -476,11 +453,13 @@ const utolsoSzamjegyetMegelozoSzamjegyEloszlasFunction = function () {
         array[index] = value.map(item =>
             myLengths[index] == 0 ? 0 : Number((item * 100 / myLengths[index]).toFixed(5)))
     })
+}
 
+const eloszlastKiir = function (utolsoSzamjegyetMegelozoSzamjegyEloszlas) {
     const myTbody = document.querySelector("#TbodyForUtolsoSzamjegyetMegelozoSzamjegyEloszlas")
     myTbody.innerHTML = "";
     let content = "";
-    utolsoSzamjegyetMegelozoSzamjegyEloszlas.forEach((value, index,array) => {
+    utolsoSzamjegyetMegelozoSzamjegyEloszlas.forEach((value, index, array) => {
         content += `
         <tr><td>${index}</td>
         `
@@ -489,27 +468,565 @@ const utolsoSzamjegyetMegelozoSzamjegyEloszlasFunction = function () {
         value.forEach((value) => {
             content += `
             <td
-            ${value==min&&value!=0?"style='color:green'":''}
-            ${value==max&&value!=0?"style='color:red'":''}
+            ${value == min && value != 0 ? "style='color:green'" : ''}
+            ${value == max && value != 0 ? "style='color:red'" : ''}
             >${value} %</td>
             `
         })
         content += `<tr>`
         myTbody.innerHTML = content;
     })
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("#buttonForSzamjegyetMegelozoMaximumokHol")
+        .addEventListener('click', szamjegyetMegelozoMaximumokHolFunction)
+})
+
+content = "<tr>"
+for (let i = 0; i < 10; i++) {
+    content += `<td>${i}</td>`
+}
+content += "</tr>"
+document.querySelector("#theadForDistributionOfExtreme").innerHTML = content;
+
+let allExtremeArray = Array();
+let extremeArray = Array();
+let myDigit = "";
+let allEloszlasNumber = Array();
+let allEloszlasPercent = Array();
+let digitEloszlasPercent = Array();
+const szamjegyetMegelozoMaximumokHolFunction = function () {
+    let myNumber1 = document.querySelector("#selectForSzamjegyetMegelozoMaximumokHol1").value;
+    myNumber1 = parseInt(myNumber1);
+    let myNumber2 = document.querySelector("#selectForSzamjegyetMegelozoMaximumokHol4").value;
+    myNumber2 = parseInt(myNumber2);
+    let intervalLength = document.querySelector("#hosszInputForSzamjegyetMegelozoMaximumokHol3").value;
+    intervalLength = parseInt(intervalLength);
+    myDigit = document.querySelector("#selectForSzamjegyetMegelozoMaximumokHol2").value
+
+    if (intervalLength > primes.length) {
+        alert(`A hosszúság max. értéke ${primes.length} lehet.`);
+        document.querySelector("#hosszInputForSzamjegyetMegelozoMaximumokHol3").value = primes.length;
+    }
+    const howManyInterval = Math.floor(primes.length / intervalLength);
+
+    console.log("intervalLength", intervalLength);
+    console.log("howManyInterval", howManyInterval)
+
+    const myMax = Math.max(myNumber1, myNumber2);
+    const primes2 = primes.filter((value) => { if (value >= 10 ** myMax) { return true } })
+
+    extremeArray = Array();
+    let extremePercentArray = Array();
+    myDigitEloszlas = Array();
+    myDigitEloszlas2 = Array();
+    allEloszlasNumber = Array();
+    allEloszlasPercent = Array();
+    digitEloszlasPercent = Array();
+
+    for (let i = 0; i < howManyInterval; i++) {
+        const first = i * intervalLength;
+        const last = (i + 1) * intervalLength - 1;
+        console.log(first);
+        console.log(last);
+        myPrimes = primes2.filter((value, index) => {
+            if (index >= first && index <= last) { return true }
+        })
+        let myPrimeStrings = Array();
+        myPrimes.forEach((value, index) => { myPrimeStrings[index] = value.toString(numberSystem) });
+
+        for (let k = 0; k < 10; k++) {
+            for (let j = 0; j < 10; j++) {
+                utolsoSzamjegyetMegelozoSzamjegyEloszlas[k][j] = 0;
+            }
+        }
+
+        //ellenőrzés:
+        if (i == 2) {
+            for (let k = 0; k < 10; k++) {
+                for (let j = 0; j < 10; j++) {
+                    matrix[k][j] = utolsoSzamjegyetMegelozoSzamjegyEloszlas[k][j];
+                }
+            }
+        }
+
+        console.log("utolsoSzamjegyetMegelozoSzamjegyEloszlas");
+        console.log(utolsoSzamjegyetMegelozoSzamjegyEloszlas)
+        console.table(utolsoSzamjegyetMegelozoSzamjegyEloszlas)
+        utolsoSzamjegyetMegelozoSzamjegyEloszlas = szamjegyEloszlasFunction(myNumber1, myNumber2, myPrimeStrings);
+        console.log("utolsoSzamjegyetMegelozoSzamjegyEloszlas");
+        console.log(utolsoSzamjegyetMegelozoSzamjegyEloszlas)
+        console.table(utolsoSzamjegyetMegelozoSzamjegyEloszlas)
+
+        saveAllEloszlasNumber();
+
+        let myArray = utolsoSzamjegyetMegelozoSzamjegyEloszlas[myDigit].slice();
+        szamjegyEloszlasInPercent();
+        saveAllEloszlasPercent();
+        saveDigitEloszlasPercent(myArray);
+        let myPercentArray = utolsoSzamjegyetMegelozoSzamjegyEloszlas[myDigit].slice();
+        //let myExtreme = 0;
+        if (document.querySelector("#radioMax").checked == true) {
+            myExtreme = Math.max(...myArray);
+            myExtremeIndex = myArray.indexOf(myExtreme);
+            myExtremePercent = myPercentArray[myExtremeIndex];
+            extremeSum = 0;
+            myArray.forEach((value) => { extremeSum += value })
+        }
+        if (document.querySelector("#radioMin").checked == true) {
+            myExtreme = Math.min(...myArray);
+            myExtremeIndex = myArray.indexOf(myExtreme);
+            myExtremePercent = myPercentArray[myExtremeIndex];
+            extremeSum = 0;
+            myArray.forEach((value) => { extremeSum += value })
+        }
+        //mi a szám - mi a százaléka - hányszor fordul elő
+        //- összes szám összes előfordulásának az összege
+        let myLittleArray = [myExtremeIndex, myExtremePercent, myExtreme, extremeSum]
+        extremeArray.push(myLittleArray);
+
+        let content = "";
+        extremeArray.forEach((value) => {
+            content += `${value[0]}, <span>`
+        })
+        document.querySelector("#extremeEloszlas").innerHTML = content;
+        console.log(extremeArray);
+    }
+
+    szamjegyetMegelozoMaximumokCanvasFunction();
+
+    distributionOfExtremeArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    extremeArray.forEach((value, index) => {
+        distributionOfExtremeArray[value[0]] += 1;
+    })
+
+    let sumOfExtremePercentes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let sumOfExtremePercentesLength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    extremeArray.forEach((value) => {
+        index = 0;
+        for (let i = 0; i < 10; i++) {
+            if (value[0] == i) {
+                sumOfExtremePercentes[i] += value[1];
+                sumOfExtremePercentesLength[i] += 1;
+            }
+        }
+    })
+    let finalPercentes = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    sumOfExtremePercentes.forEach((value, index) => {
+        finalPercentes[index] =
+            (value / (sumOfExtremePercentesLength[index] == 0 ? 1 : sumOfExtremePercentesLength[index])).toFixed(2);
+    })
+    console.log(finalPercentes);
+    //DoE DistributionOfExtreme
+    let DoEcontent = "";
+    DoEcontent += "<tr>"
+    distributionOfExtremeArray.forEach((value) => {
+        DoEcontent += `<td>${value}</td>`
+    })
+    DoEcontent += "</tr><tr>";
+    finalPercentes.forEach((value) => {
+        DoEcontent += `<td>${value} %</td>`
+
+    })
+    DoEcontent += "<tr>"
+
+    let myArray2 = Array();
+    myArray2 = tablazatNegyedikSora(myNumber1);
+
+    DoEcontent += "<tr>"
+    myArray2.forEach((value) => {
+        DoEcontent += `<td>${value} %</td>`
+    })
+
+    document.querySelector("#tbodyForDistributionOfExtreme").innerHTML = DoEcontent;
+}
+
+const szamjegyetMegelozoMaximumokCanvasFunction = function () {
+
+    document.querySelector("#szamjegyetMegelozoMaximumokCanvas").width = `${extremeArray.length * 3}`
 
 
+    down = 100
+    let c = document.querySelector("#szamjegyetMegelozoMaximumokCanvas");
+    let ctx = c.getContext("2d");
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    extremeArray.forEach((value, index) => {
+        ctx.moveTo(3 * index, 100);
+        ctx.lineTo(3 * index, 100 - 10 * value[0]);
+        ctx.stroke();
+    })
+    //ctx.closePath();
+}
+
+const tablazatNegyedikSora = function (myNumber1) {
+
+    let myArray = Array()
+    for (let i = 0; i < 10; i++) {
+        myArray[myArray.length] = percentFunction2(myNumber1, i)
+    }
+    return myArray;
+}
+
+const saveAllEloszlasNumber = function () {
+    let myArray = Array();
+    allEloszlasNumber[allEloszlasNumber.length] = myArray;
+    for (let i = 0; i < 10; i++) {
+        myArray[i] = Array();
+        for (let j = 0; j < 10; j++) {
+            myArray[i][j] = utolsoSzamjegyetMegelozoSzamjegyEloszlas[i][j];
+        }
+    }
+}
+
+const saveAllEloszlasPercent = function () {
+    let myArray = Array();
+    allEloszlasPercent[allEloszlasPercent.length] = myArray;
+    for (let i = 0; i < 10; i++) {
+        myArray[i] = Array();
+        for (let j = 0; j < 10; j++) {
+            myArray[i][j] = utolsoSzamjegyetMegelozoSzamjegyEloszlas[i][j];
+        }
+    }
+}
+
+const saveDigitEloszlasPercent = function (myArray) {
+    let myArray2 = Array();
+    digitEloszlasPercent[allEloszlasPercent.length] = myArray2;
+    for (let i = 0; i < 10; i++) {
+        myArray2[i] = myArray[i];
+    }
+}
+
+//ellenőrzés
+extremeArrayNumber = Array();
+const percentFunction = function (number) {
+    extremeArrayNumber = Array();
+    let mySum = 0;
+    extremeArrayNumber = extremeArray.filter((value) => { if (value[0] == number) { return true } })
+    extremeArrayNumber.forEach((value) => {
+        mySum += value[1];
+    })
+    mySum = (mySum / extremeArrayNumber.length).toFixed(2);
+    console.log(mySum)
+}
+
+const percentFunction2 = function (number1, number2) {
+    extremeArrayNumber = Array();
+    let mySum = 0;
+    allEloszlasPercent.forEach((value) => {
+        mySum += value[number1][number2]
+    })
+    mySum = (mySum / allEloszlasPercent.length).toFixed(2);
+    console.log(mySum)
+    return mySum;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("#buttonForHatulrolAHanyadikSzamjegy")
+        .addEventListener('click', hatulrolAHanyadikSzamjegyFunction)
+})
+
+let primesHHSz = Array();
+let myGapsArray = Array();
+let myMax = 0;
+let primeStrings2 = Array();
+const hatulrolAHanyadikSzamjegyFunction = function () {
+    let myNumber1 = document.querySelector("#selectForHatulrolAHanyadikSzamjegy").value;
+    myNumber1 = parseInt(myNumber1);
+    let myNumber2 = document.querySelector("#selectForHatulrolAHanyadikSzamjegy2").value;
+    myNumber2 = parseInt(myNumber2);
+    primeStrings2 = primeStrings.filter((value) => { if (value.length > myNumber1 - 1) { return true } });
+    console.log(primeStrings2);
+    primesHHSz = Array();
+
+    let myGap = 0;
+    myGapsArray = Array();
+    primeStrings2.forEach((value) => {
+        if (value[value.length - myNumber1] == myNumber2) {
+            myGapsArray.push(myGap); myGap = 0;
+            primesHHSz.push(value)
+        }
+        else {
+            myGap += 1;
+        }
+    })
+
+    console.log(myGapsArray);
+
+    myMax = Math.max(...myGapsArray)
+    document.querySelector("#span1").innerHTML = myNumber1;
+    document.querySelector("#span2").innerHTML = primeStrings2.length;
+    let myPercent = (myGapsArray.length * 100 / primeStrings2.length).toFixed(2);
+    document.querySelector("#span3").innerHTML = `${myPercent} %`;
+    document.querySelector("#span4").innerHTML = myMax;
+
+    hatulrolAHanyadikSzamjegyArrayFunction();
+    hatulrolAHanyadikSzamjegyCanvasFunction();
+    hatulrolAHanyadikSzamjegyEloszlasFunction();
+    hanyPrimEgymasMellettFunction();
+}
+
+let hatulrolAHanyadikSzamjegyEloszlas = Array();
+const hatulrolAHanyadikSzamjegyEloszlasFunction = function () {
+    for (let i = 0; i < myMax + 1; i++) {
+        hatulrolAHanyadikSzamjegyEloszlas[i] = 0;
+    }
+    myGapsArray.forEach((value) => {
+        hatulrolAHanyadikSzamjegyEloszlas[value] += 1;
+    })
+    hatulrolAHanyadikSzamjegyEloszlas2 = hatulrolAHanyadikSzamjegyEloszlas.slice(0);
+    hatulrolAHanyadikSzamjegyEloszlas2.shift();
+    let myMax2 = Math.max(...hatulrolAHanyadikSzamjegyEloszlas2);
+    let place = document.querySelector("#divForHatulrolAHanyadikSzamjegyEloszlasArray");
+    let content = "";
+    hatulrolAHanyadikSzamjegyEloszlas.forEach((value, index) => {
+        content += `<span
+        ${value == 0 ? ' style="color:green" ' : ''}
+        ${value == myMax2 ? ' style="color:red" ' : ''}
+        >(${index}) ${value}, </span>`
+    })
+    place.innerHTML = content;
 
 
+    document.querySelector("#canvasHatulrolAHanyadikSzamjegyEloszlas").width = hatulrolAHanyadikSzamjegyEloszlas2.length * 5;
+    document.querySelector("#canvasHatulrolAHanyadikSzamjegyEloszlas").height = myMax2;
 
+    let c = document.querySelector("#canvasHatulrolAHanyadikSzamjegyEloszlas");
+    let ctx = c.getContext("2d");
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    hatulrolAHanyadikSzamjegyEloszlas2.forEach((value, index) => {
+        ctx.moveTo(index * 5, myMax2);
+        ctx.lineTo(index * 5, myMax2 - value);
+        ctx.stroke();
+    })
 
 }
 
+let hanyPrimEgymasMellettArray = Array();
+const hanyPrimEgymasMellettFunction = function () {
+    let howManyNeighbour = 0;
+    let howLongTheGap = 0;
+    myGapsArray.forEach((value, index) => {
+        if (value == 0) {
+            if (howLongTheGap != 0) {
+                hanyPrimEgymasMellettArray.push(howLongTheGap);
+            }
+            howLongTheGap = 0;
+            howManyNeighbour += 1;
 
+        }
+        else {
+            if (howManyNeighbour != 0) { hanyPrimEgymasMellettArray.push(howManyNeighbour) }
+            howManyNeighbour = 0;
+            howLongTheGap += value;
+        }
+    })
+    console.log(hanyPrimEgymasMellettArray);
 
+    let place = document.querySelector("#divForHanyPrimEgymasMellettArray");
+    content = "";
+    hanyPrimEgymasMellettArray.forEach((value, index) => {
+        content += `<span
+        ${index % 2 == 0 ? " style='color:grey' " : " style='color:black' "}
+        >${value}, </span>`
+    })
+    place.innerHTML = content;
 
+    let myMax2 = Math.max(...hanyPrimEgymasMellettArray);
+    document.querySelector("#canvasForHanyPrimEgymasMellett").width = hanyPrimEgymasMellettArray.length * 5;
+    document.querySelector("#canvasForHanyPrimEgymasMellett").height = myMax2;
 
+    let c = document.querySelector("#canvasForHanyPrimEgymasMellett");
+    let ctx = c.getContext("2d");
+    ctx.lineWidth = 5;
+    hanyPrimEgymasMellettArray.forEach((value, index) => {
+        ctx.beginPath();
+        ctx.moveTo(index * 5, myMax2);
+        ctx.lineTo(index * 5, myMax2 - value);
+        if (index % 2 == 0) { ctx.strokeStyle = "grey" }
+        if (index % 2 == 1) { ctx.strokeStyle = "black" }
+        ctx.stroke();
+    })
 
+    let myPrimesContent = "";
+    primeStrings2.forEach((value, index) => {
+        myPrimesContent += `<span
+        ${primesHHSz.includes(value) ? " style='color:black' " : " style='color:grey' "}
+        >(${index + 1}) ${value}, </span>`
+    })
+    document.querySelector("#myPrimes").innerHTML = myPrimesContent;
+}
+
+const hatulrolAHanyadikSzamjegyArrayFunction = function () {
+    let place = document.querySelector("#divForHatulrolAHanyadikSzamjegyArray");
+    let content = "";
+    myGapsArray.forEach((value, index) => {
+        content += `<span
+        ${value != 0 ? " style='color:red' " : ""}
+        >(${index}) ${value}, </span>`
+    })
+    place.innerHTML = content;
+}
+
+const hatulrolAHanyadikSzamjegyCanvasFunction = function () {
+    console.log(myGapsArray);
+    let limit = Math.min(myGapsArray.length, 5000);
+    let myMax = Math.max(...myGapsArray);
+    document.querySelector("#canvasForHatulrolAHanyadikSzamjegy").width = `${limit}`
+    document.querySelector("#canvasForHatulrolAHanyadikSzamjegy").height = `${myMax}`
+
+    let c = document.querySelector("#canvasForHatulrolAHanyadikSzamjegy");
+    let ctx = c.getContext("2d");
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    //myGapsArray.forEach((value, index) => {
+    for (let index = 0; index < limit; index++) {
+        ctx.moveTo(index, myMax);
+        ctx.lineTo(index, myMax - myGapsArray[index]);
+        ctx.stroke();
+    }
+    ctx.moveTo(0, myMax);
+    ctx.lineTo(0, 0);
+    ctx.stroke();
+
+    //})
+    //ctx.closePath();
+}
+
+const congruence = function (number) {
+    let congruenceDistribution = Array();
+    for (let i = 0; i < number; i++) {
+        congruenceDistribution[i] = 0;
+    }
+    primes.forEach((value) => {
+        congruenceDistribution[value % number] += 1;
+    })
+
+    console.table(congruenceDistribution)
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector("#congruenceButton")
+        .addEventListener('click', congruence2)
+})
+
+const congruence2 = function () {
+    let number = document.querySelector("#congruenceInput").value;
+    number = parseInt(number);
+    let congruenceDistribution = Array();
+    for (let i = 0; i < number; i++) {
+        congruenceDistribution[i] = Array();
+        for (let j = 0; j < number; j++) {
+            congruenceDistribution[i][j] = 0;
+        }
+    }
+    for (let i = 0; i < primes.length - 1; i++) {
+        congruenceDistribution[primes[i] % number][primes[i + 1] % number] += 1;
+    }
+    for (let i = 0; i < congruenceDistribution.length; i++) {
+        let sum = 0;
+        congruenceDistribution[i].forEach((value) => {
+            sum += value;
+        })
+        congruenceDistribution[i].forEach((value, index, array) => {
+            if(document.querySelector("#notPercent").checked==true){array[index] = value}
+            if(document.querySelector("#percent").checked==true){
+                array[index] = Number((value * 100 / sum).toFixed(2))}
+        })
+    }
+    console.table(congruenceDistribution)
+    let content = "";
+    content += `<tr><td></td>`
+    congruenceDistribution.forEach((value, index) => {
+        content += `<td>${index}</td>`
+    })
+    content += `</tr>`
+    congruenceDistribution.forEach((value, index) => {
+        let myMax = Math.max(...value);
+        content += `<tr><td>${index}</td>`
+        value.forEach((value) => {
+            content += `<td
+            ${value == myMax ? " style='color:red' " : ""}
+            ${value == 0 ? " style='color:grey' " : ""}
+            >${value}</td>`
+        })
+        content += `</tr>`
+    })
+    document.querySelector("#congruenceTbody").innerHTML = content;
+
+    let myMaxArray = Array();
+    congruenceDistribution.forEach((value, index) => {
+        myMaxArray[index] = value.indexOf(Math.max(...value))
+    })
+    console.log(myMaxArray)
+    let orderArray = Array();
+    let orderArray2 = Array();
+    orderArray[0] = myMaxArray[0]
+    myMaxArray.forEach((value, index) => {
+        orderArray[index + 1] = myMaxArray[orderArray[index]]
+    })
+    console.log(orderArray)
+    myMaxArray.forEach((value, index) => {
+        orderArray2[index] = value;
+    })
+    console.log(orderArray2);
+    let content2 = "";
+    orderArray2.forEach((value, index) => {
+        content2 += `
+        <span>(${index}) ${value}, </span>
+        `
+    })
+    document.querySelector("#pForOrderArray").innerHTML = content2;
+
+}
+
+let congruenceDistribution = Array();
+const congruence3 = function (number, limit) {
+    //az adott sorszámú (limit) prím az adott számra (number) milyen maradékot ad
+    //ezen számra ezen maradékot adó prímek után következő prímek
+    //a legnagyobb százalékban ezt a maradékot adják: a visszatérési érték
+    congruenceDistribution = Array();
+    for (let i = 0; i < number; i++) {
+        congruenceDistribution[i] = 0;
+    }
+    let remainder = primes[limit] % number;
+    for (let i = 0; i < limit - 1; i++) {
+        if (primes[i] % number == remainder)
+            congruenceDistribution[primes[i + 1] % number] += 1;
+    }
+    let sum = 0;
+    congruenceDistribution.forEach((value) => {
+        sum += value;
+    })
+    congruenceDistribution.forEach((value, index, array) => {
+        array[index] = (value * 100 / sum).toFixed(2)
+    })
+
+    congruenceDistribution = congruenceDistribution.map(item => Number(item));
+    let myMax = Math.max(...congruenceDistribution);
+    let myRemainder = congruenceDistribution.indexOf(myMax)
+
+    //console.table(congruenceDistribution)
+    //console.log(myMax);
+    //console.log(myRemainder)
+    return myRemainder;
+}
+
+const congruenceResult = function (limit) {
+    congruenceResultArray = Array();
+    let myLimit = Math.floor(Math.sqrt(limit))
+    for (let i = 0; i < myLimit; i++) {
+        let myRemainder = congruence3(i, limit);
+        let myPrime = primes[i];
+        let myArray = [myPrime, myRemainder];
+        congruenceResultArray[i] = myArray;
+
+    }
+    console.table(congruenceResultArray)
+}
 
 
 

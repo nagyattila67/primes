@@ -9,3 +9,16 @@ distributionTable{width:900px;height:500px;overflow: scroll;}
 #divForDistributionCanvas{ width:900px;height:500px;overflow: scroll;}
 #divForMonotonityOfOccurrenceOfDistancesCanvas{ width:900px;height:300px;overflow: scroll;}
 .div2{overflow: scroll;}
+#divForExtremeEloszlas{height:120px}
+#divForSzamjegyetMegelozoMaximumokCanvas{overflow: scroll;}
+#divForHatulrolAHanyadikSzamjegy{overflow: scroll;height:200px}
+#divForHatulrolAHanyadikSzamjegyArray{height:120px; background-color:white;overflow: scroll;}
+#divForHatulrolAHanyadikSzamjegyEloszlasArray{height:120px; background-color:white;overflow: scroll;}
+
+#divForCanvasHatulrolAHanyadikSzamjegyEloszlas{overflow: scroll; height:200px}
+#canvasHatulrolAHanyadikSzamjegyEloszlas{overflow: scroll;}
+#divForHanyPrimEgymasMellettArray{height:120px; background-color:white;overflow: scroll;}
+#divForCanvasHanyPrimEgymasMellett{overflow: scroll; height:200px}
+#myPrimes{height:120px; background-color:white;overflow: scroll;}
+#divForCongruence{overflow: auto;height:400px; width:1000px;}
+#pForOrderArray{overflow: auto;height:120px;width:1000px;}
